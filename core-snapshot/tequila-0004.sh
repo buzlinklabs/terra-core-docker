@@ -1,4 +1,4 @@
-docker build -t buzlinklabs/terra-core:tequila-0004-snapshot \
+docker build -t buzlinklabs/terra-core:tequila-0004-h$1 \
     --build-arg TARGET_HEIGHT=$1 \
     --build-arg CHAIN_ID=tequila-0004 \
     --build-arg ENV_MONIKER=terra-docker \
