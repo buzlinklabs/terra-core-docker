@@ -3,11 +3,13 @@ ARG CORE_TAG=${CHAIN_ID}
 
 FROM buzlinklabs/terra-core:${CORE_TAG}
 
+ARG TARGET_HEIGHT=0
 ARG CHAIN_ID
 ARG ENV_MONIKER
 ARG ENV_MIN_GAS_PRICES
 ARG ENV_SEEDS
 
+ENV TARGET_HEIGHT=${TARGET_HEIGHT}
 ENV MONIKER=${ENV_MONIKER}
 ENV MIN_GAS_PRICES=${ENV_MIN_GAS_PRICES}
 ENV SEEDS=${ENV_SEEDS}
@@ -20,9 +22,9 @@ RUN adduser terra-snapshot --disabled-password --uid 2000
 WORKDIR /home/terra-snapshot
 USER terra-snapshot
 
-RUN LCD_ENABLE=true && cp /home/terra/genesis.json ~/genesis.json && run-terrad.sh & wait-sync.sh
+RUN LCD_ENABLE=true && cp /home/terra/genesis.json ~/genesis.json && run-terrad.sh | wait-sync.sh $TARGET_HEIGHT
 
 USER terra
 WORKDIR /home/terra
 
-CMD run-terrad.sh
+CMD mv /home/terra-snapshot/.terrad/* /home/terra/.terrad/ && run-terrad.sh
