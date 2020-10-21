@@ -39,7 +39,7 @@ do
             continue
         fi
 
-        if [ $height -gt $1 ]
+        if [ $height -ge $1 ]
         then
             echo "Reach limit ($1/$height)"
             exit 0
