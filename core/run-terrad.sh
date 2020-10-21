@@ -12,7 +12,7 @@ then
     exit 1
 fi
 
-if [ ! -e "/home/terra/.terrad/config/genesis.json" ]
+if [ ! -e "$HOME/.terrad/config/genesis.json" ]
 then
     echo "Initialize terrad"
     terrad init ${MONIKER}

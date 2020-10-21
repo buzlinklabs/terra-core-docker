@@ -9,7 +9,6 @@ ARG ENV_MONIKER
 ARG ENV_MIN_GAS_PRICES
 ARG ENV_SEEDS
 
-ENV TARGET_HEIGHT=${TARGET_HEIGHT}
 ENV MONIKER=${ENV_MONIKER}
 ENV MIN_GAS_PRICES=${ENV_MIN_GAS_PRICES}
 ENV SEEDS=${ENV_SEEDS}
@@ -18,11 +17,12 @@ ENV LCD_CHAIN_ID=${CHAIN_ID}
 COPY wait-sync.sh /usr/local/bin/wait-sync.sh
 
 USER root
-RUN adduser terra-snapshot --disabled-password --uid 2000
+RUN touch /tmp/check_user && [ "$(id -u terra-snapshot 2> /tmp/check_user)" ] || adduser terra-snapshot --disabled-password --uid 2000
 WORKDIR /home/terra-snapshot
 USER terra-snapshot
 
-RUN LCD_ENABLE=true && cp /home/terra/genesis.json ~/genesis.json && run-terrad.sh | wait-sync.sh $TARGET_HEIGHT
+RUN [ -e "genesis.json" ] || cp /home/terra/genesis.json ~/genesis.json
+RUN LCD_ENABLE=true && run-terrad.sh | wait-sync.sh $TARGET_HEIGHT
 
 USER terra
 WORKDIR /home/terra
